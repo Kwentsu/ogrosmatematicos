@@ -183,78 +183,81 @@ export default function GameScreen({ config, onGameEnd }: GameScreenProps) {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-green-400">
-      {/* Background Scenario - Fill entire screen */}
-      <div className="absolute inset-0">
-        <Image
-          src="/Cenário.png"
-          alt="Cenário do jogo"
-          fill
-          className="object-cover"
-          priority
-        />
-        
-        {/* Ogres positioned individually over each stone */}
-        {ogres.map((ogre, index) => {
-          // Posições específicas para cada pedra (ajustadas para tela cheia)
-          const positions = [
-            { left: '25%', bottom: '35%' }, // Ogro Azul - pedra esquerda
-            { left: '50%', bottom: '37%' }, // Ogro Vermelho - pedra central
-            { left: '75%', bottom: '35%' }  // Ogro Amarelo - pedra direita
-          ];
+    <div className="min-h-screen relative overflow-hidden bg-green-400 flex flex-col">
+      {/* Game container maintaining aspect ratio */}
+      <div className="flex-1 flex items-center justify-center p-2">
+        <div className="relative w-full max-w-4xl aspect-[4/3]">
+          {/* Background Scenario maintaining proportions */}
+          <Image
+            src="/Cenário.png"
+            alt="Cenário do jogo"
+            fill
+            className="object-contain"
+            priority
+          />
           
-          return (
-            <div key={ogre.name}>
-              {/* Answer number above ogre */}
-              <div 
-                className="absolute transform -translate-x-1/2 z-20"
-                style={{ 
-                  left: positions[index].left, 
-                  bottom: `calc(${positions[index].bottom} + 80px)` 
-                }}
-              >
-                <div className="bg-white border-2 sm:border-4 border-yellow-400 rounded-full w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 flex items-center justify-center shadow-lg animate-bounce">
-                  <span className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800">
-                    {currentQuestion.options[ogrePositions[index]]}
-                  </span>
+          {/* Ogres positioned individually over each stone */}
+          {ogres.map((ogre, index) => {
+            // Posições específicas para cada pedra (baseadas na imagem original)
+            const positions = [
+              { left: '24%', bottom: '40%' }, // Ogro Azul - pedra esquerda
+              { left: '50%', bottom: '42%' }, // Ogro Vermelho - pedra central 
+              { left: '76%', bottom: '40%' }  // Ogro Amarelo - pedra direita
+            ];
+            
+            return (
+              <div key={ogre.name}>
+                {/* Answer number above ogre */}
+                <div 
+                  className="absolute transform -translate-x-1/2 z-20"
+                  style={{ 
+                    left: positions[index].left, 
+                    bottom: `calc(${positions[index].bottom} + 70px)` 
+                  }}
+                >
+                  <div className="bg-white border-2 sm:border-4 border-yellow-400 rounded-full w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 flex items-center justify-center shadow-lg animate-bounce">
+                    <span className="text-sm sm:text-lg lg:text-2xl font-bold text-gray-800">
+                      {currentQuestion.options[ogrePositions[index]]}
+                    </span>
+                  </div>
+                </div>
+                
+                {/* Ogre positioned on stone */}
+                <div 
+                  className="absolute transform -translate-x-1/2"
+                  style={{ 
+                    left: positions[index].left, 
+                    bottom: positions[index].bottom 
+                  }}
+                >
+                  <button
+                    onClick={() => handleOgreClick(index)}
+                    disabled={showFeedback.show}
+                    className="relative transform transition-all duration-200 hover:scale-110 focus:scale-110 disabled:cursor-not-allowed hover:animate-pulse"
+                  >
+                    <Image
+                      src={ogre.src}
+                      alt={`Ogro ${ogre.name}`}
+                      width={60}
+                      height={60}
+                      className="drop-shadow-lg sm:w-16 sm:h-16 lg:w-20 lg:h-20"
+                    />
+                  </button>
                 </div>
               </div>
-              
-              {/* Ogre positioned on stone */}
-              <div 
-                className="absolute transform -translate-x-1/2"
-                style={{ 
-                  left: positions[index].left, 
-                  bottom: positions[index].bottom 
-                }}
-              >
-                <button
-                  onClick={() => handleOgreClick(index)}
-                  disabled={showFeedback.show}
-                  className="relative transform transition-all duration-200 hover:scale-110 focus:scale-110 disabled:cursor-not-allowed hover:animate-pulse"
-                >
-                  <Image
-                    src={ogre.src}
-                    alt={`Ogro ${ogre.name}`}
-                    width={70}
-                    height={70}
-                    className="drop-shadow-lg sm:w-20 sm:h-20 lg:w-24 lg:h-24"
-                  />
-                </button>
-              </div>
+            );
+          })}
+          
+          {/* Question Area - positioned inside the existing rectangle in the image */}
+          <div className="absolute bottom-[6%] left-1/2 transform -translate-x-1/2 w-[80%]">
+            <div className="text-center py-1 sm:py-2">
+              <h2 className="text-lg sm:text-xl lg:text-3xl font-bold text-gray-800 mb-1">
+                {currentQuestion.question}
+              </h2>
+              <p className="text-xs sm:text-sm lg:text-base text-gray-600">
+                Clique no ogro com a resposta correta!
+              </p>
             </div>
-          );
-        })}
-        
-        {/* Question Area - positioned inside the existing rectangle in the image */}
-        <div className="absolute bottom-[8%] sm:bottom-[10%] left-1/2 transform -translate-x-1/2 w-[90%] sm:w-[80%] lg:w-[70%]">
-          <div className="text-center py-2 sm:py-3">
-            <h2 className="text-xl sm:text-2xl lg:text-4xl font-bold text-gray-800 mb-1">
-              {currentQuestion.question}
-            </h2>
-            <p className="text-sm sm:text-base lg:text-lg text-gray-600">
-              Clique no ogro com a resposta correta!
-            </p>
           </div>
         </div>
       </div>
