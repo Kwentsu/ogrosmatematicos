@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { GameConfig, Operation, Difficulty, GameMode } from '@/app/page';
 
 interface ConfigMenuProps {
@@ -67,10 +68,34 @@ export default function ConfigMenu({ onStartGame }: ConfigMenuProps) {
           
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="flex justify-center items-center mb-4">
-              <div className="text-6xl animate-bounce mr-2">🧌</div>
-              <div className="text-6xl animate-bounce" style={{animationDelay: '0.2s'}}>🧌</div>
-              <div className="text-6xl animate-bounce" style={{animationDelay: '0.4s'}}>🧌</div>
+            <div className="flex justify-center items-center mb-4 space-x-4">
+              <div className="animate-bounce">
+                <Image
+                  src="/Azul.png"
+                  alt="Ogro Azul"
+                  width={80}
+                  height={80}
+                  className="drop-shadow-lg"
+                />
+              </div>
+              <div className="animate-bounce" style={{animationDelay: '0.2s'}}>
+                <Image
+                  src="/Red.png"
+                  alt="Ogro Vermelho"
+                  width={80}
+                  height={80}
+                  className="drop-shadow-lg"
+                />
+              </div>
+              <div className="animate-bounce" style={{animationDelay: '0.4s'}}>
+                <Image
+                  src="/Yellow.png"
+                  alt="Ogro Amarelo"
+                  width={80}
+                  height={80}
+                  className="drop-shadow-lg"
+                />
+              </div>
             </div>
             <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-3">
               Ogros Matemáticos
