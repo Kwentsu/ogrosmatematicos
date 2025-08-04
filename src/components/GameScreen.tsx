@@ -196,37 +196,49 @@ export default function GameScreen({ config, onGameEnd }: GameScreenProps) {
           />
           
           {/* Ogres positioned over the stones */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            {/* Container positioned specifically over the stones area */}
-            <div className="absolute bottom-[40%] left-1/2 transform -translate-x-1/2 flex justify-between w-[70%]">
-              {ogres.map((ogre, index) => (
-                <div key={ogre.name} className="relative flex flex-col items-center">
-                  {/* Answer number above ogre */}
-                  <div className="mb-2 z-20">
-                    <div className="bg-white border-4 border-yellow-400 rounded-full w-12 h-12 lg:w-16 lg:h-16 flex items-center justify-center shadow-lg animate-bounce">
-                      <span className="text-lg lg:text-2xl font-bold text-gray-800">
-                        {currentQuestion.options[ogrePositions[index]]}
-                      </span>
+          <div className="absolute inset-0">
+            {ogres.map((ogre, index) => {
+              // Posições específicas para cada pedra na imagem
+              const positions = [
+                { left: '19%' }, // Ogro Azul - pedra esquerda
+                { left: '50%' },  // Ogro Vermelho - pedra central
+                { left: '81%' }   // Ogro Amarelo - pedra direita
+              ];
+              
+              return (
+                <div 
+                  key={ogre.name} 
+                  className="absolute bottom-[40%] transform -translate-x-1/2"
+                  style={{ left: positions[index].left }}
+                >
+                  <div className="flex flex-col items-center">
+                    {/* Answer number above ogre */}
+                    <div className="mb-2 z-20">
+                      <div className="bg-white border-4 border-yellow-400 rounded-full w-12 h-12 lg:w-16 lg:h-16 flex items-center justify-center shadow-lg animate-bounce">
+                        <span className="text-lg lg:text-2xl font-bold text-gray-800">
+                          {currentQuestion.options[ogrePositions[index]]}
+                        </span>
+                      </div>
                     </div>
+                    
+                    {/* Ogre */}
+                    <button
+                      onClick={() => handleOgreClick(index)}
+                      disabled={showFeedback.show}
+                      className="relative transform transition-all duration-200 hover:scale-110 focus:scale-110 disabled:cursor-not-allowed hover:animate-pulse"
+                    >
+                      <Image
+                        src={ogre.src}
+                        alt={`Ogro ${ogre.name}`}
+                        width={80}
+                        height={80}
+                        className="drop-shadow-lg lg:w-24 lg:h-24"
+                      />
+                    </button>
                   </div>
-                  
-                  {/* Ogre */}
-                  <button
-                    onClick={() => handleOgreClick(index)}
-                    disabled={showFeedback.show}
-                    className="relative transform transition-all duration-200 hover:scale-110 focus:scale-110 disabled:cursor-not-allowed hover:animate-pulse"
-                  >
-                    <Image
-                      src={ogre.src}
-                      alt={`Ogro ${ogre.name}`}
-                      width={80}
-                      height={80}
-                      className="drop-shadow-lg lg:w-24 lg:h-24"
-                    />
-                  </button>
                 </div>
-              ))}
-            </div>
+              );
+            })}
           </div>
           
           {/* Question Area - positioned inside the existing rectangle in the image */}
