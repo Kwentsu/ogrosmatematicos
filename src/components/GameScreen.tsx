@@ -184,8 +184,8 @@ export default function GameScreen({ config, onGameEnd }: GameScreenProps) {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-green-400">
-      {/* Background Scenario - Fixed size container */}
-      <div className="absolute inset-0 flex items-center justify-center">
+      {/* Background Scenario - Responsive container */}
+      <div className="absolute inset-0 flex items-center justify-center p-4">
         <div className="relative w-full max-w-4xl aspect-[4/3] mx-auto">
           <Image
             src="/Cenário.png"
@@ -195,59 +195,65 @@ export default function GameScreen({ config, onGameEnd }: GameScreenProps) {
             priority
           />
           
-          {/* Ogres positioned over the stones */}
-          <div className="absolute inset-0">
-            {ogres.map((ogre, index) => {
-              // Posições específicas para cada pedra na imagem
-              const positions = [
-                { left: '19%' }, // Ogro Azul - pedra esquerda
-                { left: '50%' },  // Ogro Vermelho - pedra central
-                { left: '81%' }   // Ogro Amarelo - pedra direita
-              ];
-              
-              return (
+          {/* Ogres positioned individually over each stone */}
+          {ogres.map((ogre, index) => {
+            // Posições específicas para cada pedra (ajustadas para alinhar corretamente)
+            const positions = [
+              { left: '25%', bottom: '42%' }, // Ogro Azul - pedra esquerda
+              { left: '50%', bottom: '44%' }, // Ogro Vermelho - pedra central (ligeiramente mais alta)
+              { left: '75%', bottom: '42%' }  // Ogro Amarelo - pedra direita
+            ];
+            
+            return (
+              <div key={ogre.name}>
+                {/* Answer number above ogre */}
                 <div 
-                  key={ogre.name} 
-                  className="absolute bottom-[40%] transform -translate-x-1/2"
-                  style={{ left: positions[index].left }}
+                  className="absolute transform -translate-x-1/2 z-20"
+                  style={{ 
+                    left: positions[index].left, 
+                    bottom: `calc(${positions[index].bottom} + 120px)` 
+                  }}
                 >
-                  <div className="flex flex-col items-center">
-                    {/* Answer number above ogre */}
-                    <div className="mb-2 z-20">
-                      <div className="bg-white border-4 border-yellow-400 rounded-full w-12 h-12 lg:w-16 lg:h-16 flex items-center justify-center shadow-lg animate-bounce">
-                        <span className="text-lg lg:text-2xl font-bold text-gray-800">
-                          {currentQuestion.options[ogrePositions[index]]}
-                        </span>
-                      </div>
-                    </div>
-                    
-                    {/* Ogre */}
-                    <button
-                      onClick={() => handleOgreClick(index)}
-                      disabled={showFeedback.show}
-                      className="relative transform transition-all duration-200 hover:scale-110 focus:scale-110 disabled:cursor-not-allowed hover:animate-pulse"
-                    >
-                      <Image
-                        src={ogre.src}
-                        alt={`Ogro ${ogre.name}`}
-                        width={80}
-                        height={80}
-                        className="drop-shadow-lg lg:w-24 lg:h-24"
-                      />
-                    </button>
+                  <div className="bg-white border-2 sm:border-4 border-yellow-400 rounded-full w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16 flex items-center justify-center shadow-lg animate-bounce">
+                    <span className="text-sm sm:text-lg lg:text-2xl font-bold text-gray-800">
+                      {currentQuestion.options[ogrePositions[index]]}
+                    </span>
                   </div>
                 </div>
-              );
-            })}
-          </div>
+                
+                {/* Ogre positioned on stone */}
+                <div 
+                  className="absolute transform -translate-x-1/2"
+                  style={{ 
+                    left: positions[index].left, 
+                    bottom: positions[index].bottom 
+                  }}
+                >
+                  <button
+                    onClick={() => handleOgreClick(index)}
+                    disabled={showFeedback.show}
+                    className="relative transform transition-all duration-200 hover:scale-110 focus:scale-110 disabled:cursor-not-allowed hover:animate-pulse"
+                  >
+                    <Image
+                      src={ogre.src}
+                      alt={`Ogro ${ogre.name}`}
+                      width={60}
+                      height={60}
+                      className="drop-shadow-lg sm:w-20 sm:h-20 lg:w-24 lg:h-24"
+                    />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
           
           {/* Question Area - positioned inside the existing rectangle in the image */}
-          <div className="absolute bottom-[4%] left-1/2 transform -translate-x-1/2 w-[65%]">
-            <div className="text-center py-2">
-              <h2 className="text-2xl lg:text-4xl font-bold text-gray-800 mb-1">
+          <div className="absolute bottom-[2%] sm:bottom-[3%] lg:bottom-[4%] left-1/2 transform -translate-x-1/2 w-[85%] sm:w-[75%] lg:w-[65%]">
+            <div className="text-center py-1 sm:py-2">
+              <h2 className="text-lg sm:text-2xl lg:text-4xl font-bold text-gray-800 mb-1">
                 {currentQuestion.question}
               </h2>
-              <p className="text-sm lg:text-base text-gray-600">
+              <p className="text-xs sm:text-sm lg:text-base text-gray-600">
                 Clique no ogro com a resposta correta!
               </p>
             </div>
@@ -255,50 +261,50 @@ export default function GameScreen({ config, onGameEnd }: GameScreenProps) {
         </div>
       </div>
 
-      {/* Top Bar */}
-      <div className="absolute top-0 left-0 right-0 z-30 flex justify-between items-center p-4 bg-gradient-to-b from-black/70 to-transparent text-white">
-        <div className="flex items-center space-x-4">
-          <span className="text-lg font-bold bg-black/50 px-3 py-1 rounded-full">
+      {/* Top Bar - Responsive */}
+      <div className="absolute top-0 left-0 right-0 z-30 flex justify-between items-center p-2 sm:p-4 bg-gradient-to-b from-black/70 to-transparent text-white">
+        <div className="flex items-center space-x-2 sm:space-x-4">
+          <span className="text-sm sm:text-lg font-bold bg-black/50 px-2 sm:px-3 py-1 rounded-full">
             {config.mode === 'finite' 
               ? `${questionNumber}/${config.questionCount || 5}`
               : `#${questionNumber}`
             }
           </span>
-          <span className="bg-green-600 px-3 py-1 rounded-full text-sm font-bold">
+          <span className="bg-green-600 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-bold">
             ✅ {score.correct}
           </span>
-          <span className="bg-red-600 px-3 py-1 rounded-full text-sm font-bold">
+          <span className="bg-red-600 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-bold">
             ❌ {score.incorrect}
           </span>
         </div>
         {config.mode === 'infinite' && (
           <button
             onClick={endInfiniteGame}
-            className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-xl font-bold transition-all duration-200 transform hover:scale-105 shadow-lg"
+            className="bg-red-600 hover:bg-red-700 px-2 sm:px-4 py-1 sm:py-2 rounded-xl font-bold transition-all duration-200 transform hover:scale-105 shadow-lg text-xs sm:text-base"
           >
-            🏁 Finalizar
+            🏁 <span className="hidden sm:inline">Finalizar</span>
           </button>
         )}
       </div>
 
-      {/* Subtle Feedback Notification */}
+      {/* Subtle Feedback Notification - Responsive */}
       {showFeedback.show && (
-        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 z-50 animate-in slide-in-from-top-4 duration-300">
-          <div className={`px-6 py-3 rounded-2xl shadow-lg border-2 backdrop-blur-sm ${
+        <div className="absolute top-16 sm:top-20 left-1/2 transform -translate-x-1/2 z-50 animate-in slide-in-from-top-4 duration-300 px-4">
+          <div className={`px-3 sm:px-6 py-2 sm:py-3 rounded-2xl shadow-lg border-2 backdrop-blur-sm max-w-xs sm:max-w-none ${
             showFeedback.isCorrect 
               ? 'bg-green-100/90 border-green-400 text-green-800' 
               : 'bg-red-100/90 border-red-400 text-red-800'
           }`}>
             <div className="flex items-center space-x-2">
-              <span className="text-2xl">
+              <span className="text-lg sm:text-2xl">
                 {showFeedback.isCorrect ? '🎉' : '😅'}
               </span>
               <div>
-                <div className="font-bold">
+                <div className="font-bold text-sm sm:text-base">
                   {showFeedback.isCorrect ? 'Parabéns!' : 'Tente de novo!'}
                 </div>
                 {!showFeedback.isCorrect && (
-                  <div className="text-sm">
+                  <div className="text-xs sm:text-sm">
                     Resposta: <span className="font-bold">{showFeedback.correctAnswer}</span>
                   </div>
                 )}
