@@ -198,7 +198,7 @@ export default function GameScreen({ config, onGameEnd }: GameScreenProps) {
           {/* Ogres positioned over the stones */}
           <div className="absolute inset-0 flex items-center justify-center">
             {/* Container positioned specifically over the stones area */}
-            <div className="absolute bottom-[42%] left-1/2 transform -translate-x-1/2 flex justify-center space-x-[12%] w-[85%]">
+            <div className="absolute bottom-[40%] left-1/2 transform -translate-x-1/2 flex justify-between w-[70%]">
               {ogres.map((ogre, index) => (
                 <div key={ogre.name} className="relative flex flex-col items-center">
                   {/* Answer number above ogre */}
@@ -229,17 +229,15 @@ export default function GameScreen({ config, onGameEnd }: GameScreenProps) {
             </div>
           </div>
           
-          {/* Question Area - positioned over the scroll */}
-          <div className="absolute bottom-[8%] left-1/2 transform -translate-x-1/2 w-[85%] max-w-md">
-            <div className="bg-gradient-to-br from-yellow-100 to-yellow-200 border-4 border-yellow-500 rounded-2xl p-4 lg:p-6 shadow-2xl">
-              <div className="text-center">
-                <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
-                  {currentQuestion.question}
-                </h2>
-                <p className="text-sm lg:text-base text-gray-600">
-                  Clique no ogro com a resposta correta!
-                </p>
-              </div>
+          {/* Question Area - positioned inside the existing rectangle in the image */}
+          <div className="absolute bottom-[4%] left-1/2 transform -translate-x-1/2 w-[65%]">
+            <div className="text-center py-2">
+              <h2 className="text-2xl lg:text-4xl font-bold text-gray-800 mb-1">
+                {currentQuestion.question}
+              </h2>
+              <p className="text-sm lg:text-base text-gray-600">
+                Clique no ogro com a resposta correta!
+              </p>
             </div>
           </div>
         </div>
