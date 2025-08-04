@@ -183,57 +183,28 @@ export default function GameScreen({ config, onGameEnd }: GameScreenProps) {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Background Scenario */}
-      <div className="absolute inset-0">
-        <Image
-          src="/Cenário.png"
-          alt="Cenário do jogo"
-          fill
-          className="object-cover"
-          priority
-        />
-      </div>
-
-      {/* Game UI Overlay */}
-      <div className="relative z-10 flex flex-col h-screen">
-        {/* Top Bar */}
-        <div className="flex justify-between items-center p-4 bg-black bg-opacity-50 text-white">
-          <div className="flex items-center space-x-4">
-            <span className="text-lg font-bold">
-              {config.mode === 'finite' 
-                ? `Questão ${questionNumber}/${config.questionCount || 5}`
-                : `Questão ${questionNumber}`
-              }
-            </span>
-            <span className="bg-green-600 px-3 py-1 rounded-full text-sm">
-              ✅ {score.correct}
-            </span>
-            <span className="bg-red-600 px-3 py-1 rounded-full text-sm">
-              ❌ {score.incorrect}
-            </span>
-          </div>
-          {config.mode === 'infinite' && (
-            <button
-              onClick={endInfiniteGame}
-              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-bold transition-colors"
-            >
-              Finalizar
-            </button>
-          )}
-        </div>
-
-        {/* Ogres Area */}
-        <div className="flex-1 relative flex items-center justify-center">
+    <div className="min-h-screen relative overflow-hidden bg-green-400">
+      {/* Background Scenario - Fixed size container */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="relative w-full max-w-4xl aspect-[4/3] mx-auto">
+          <Image
+            src="/Cenário.png"
+            alt="Cenário do jogo"
+            fill
+            className="object-contain"
+            priority
+          />
+          
           {/* Ogres positioned over the stones */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex space-x-12 lg:space-x-24">
+            {/* Container positioned specifically over the stones area */}
+            <div className="absolute bottom-[42%] left-1/2 transform -translate-x-1/2 flex justify-center space-x-[12%] w-[85%]">
               {ogres.map((ogre, index) => (
-                <div key={ogre.name} className="relative">
+                <div key={ogre.name} className="relative flex flex-col items-center">
                   {/* Answer number above ogre */}
-                  <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 z-20">
-                    <div className="bg-white border-4 border-yellow-400 rounded-full w-16 h-16 flex items-center justify-center shadow-lg">
-                      <span className="text-2xl font-bold text-gray-800">
+                  <div className="mb-2 z-20">
+                    <div className="bg-white border-4 border-yellow-400 rounded-full w-12 h-12 lg:w-16 lg:h-16 flex items-center justify-center shadow-lg animate-bounce">
+                      <span className="text-lg lg:text-2xl font-bold text-gray-800">
                         {currentQuestion.options[ogrePositions[index]]}
                       </span>
                     </div>
@@ -243,59 +214,89 @@ export default function GameScreen({ config, onGameEnd }: GameScreenProps) {
                   <button
                     onClick={() => handleOgreClick(index)}
                     disabled={showFeedback.show}
-                    className="relative transform transition-all duration-200 hover:scale-110 focus:scale-110 disabled:cursor-not-allowed"
+                    className="relative transform transition-all duration-200 hover:scale-110 focus:scale-110 disabled:cursor-not-allowed hover:animate-pulse"
                   >
                     <Image
                       src={ogre.src}
                       alt={`Ogro ${ogre.name}`}
-                      width={120}
-                      height={120}
-                      className="drop-shadow-lg"
+                      width={80}
+                      height={80}
+                      className="drop-shadow-lg lg:w-24 lg:h-24"
                     />
                   </button>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-
-        {/* Question Area */}
-        <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 w-full max-w-md px-4">
-          <div className="bg-yellow-100 border-4 border-yellow-400 rounded-2xl p-6 shadow-2xl">
-            <div className="text-center">
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-2">
-                {currentQuestion.question}
-              </h2>
-              <p className="text-gray-600">
-                Clique no ogro com a resposta correta!
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Feedback Modal */}
-        {showFeedback.show && (
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className={`bg-white rounded-3xl p-8 max-w-sm mx-4 text-center transform transition-all duration-300 ${
-              showFeedback.isCorrect ? 'border-4 border-green-500' : 'border-4 border-red-500'
-            }`}>
-              <div className="text-6xl mb-4">
-                {showFeedback.isCorrect ? '🎉' : '😅'}
-              </div>
-              <h3 className={`text-2xl font-bold mb-2 ${
-                showFeedback.isCorrect ? 'text-green-600' : 'text-red-600'
-              }`}>
-                {showFeedback.isCorrect ? 'Parabéns!' : 'Tente de novo!'}
-              </h3>
-              {!showFeedback.isCorrect && (
-                <p className="text-gray-600">
-                  A resposta correta era: <span className="font-bold text-green-600">{showFeedback.correctAnswer}</span>
+          
+          {/* Question Area - positioned over the scroll */}
+          <div className="absolute bottom-[8%] left-1/2 transform -translate-x-1/2 w-[85%] max-w-md">
+            <div className="bg-gradient-to-br from-yellow-100 to-yellow-200 border-4 border-yellow-500 rounded-2xl p-4 lg:p-6 shadow-2xl">
+              <div className="text-center">
+                <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
+                  {currentQuestion.question}
+                </h2>
+                <p className="text-sm lg:text-base text-gray-600">
+                  Clique no ogro com a resposta correta!
                 </p>
-              )}
+              </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Top Bar */}
+      <div className="absolute top-0 left-0 right-0 z-30 flex justify-between items-center p-4 bg-gradient-to-b from-black/70 to-transparent text-white">
+        <div className="flex items-center space-x-4">
+          <span className="text-lg font-bold bg-black/50 px-3 py-1 rounded-full">
+            {config.mode === 'finite' 
+              ? `${questionNumber}/${config.questionCount || 5}`
+              : `#${questionNumber}`
+            }
+          </span>
+          <span className="bg-green-600 px-3 py-1 rounded-full text-sm font-bold">
+            ✅ {score.correct}
+          </span>
+          <span className="bg-red-600 px-3 py-1 rounded-full text-sm font-bold">
+            ❌ {score.incorrect}
+          </span>
+        </div>
+        {config.mode === 'infinite' && (
+          <button
+            onClick={endInfiniteGame}
+            className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-xl font-bold transition-all duration-200 transform hover:scale-105 shadow-lg"
+          >
+            🏁 Finalizar
+          </button>
         )}
       </div>
+
+      {/* Subtle Feedback Notification */}
+      {showFeedback.show && (
+        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 z-50 animate-in slide-in-from-top-4 duration-300">
+          <div className={`px-6 py-3 rounded-2xl shadow-lg border-2 backdrop-blur-sm ${
+            showFeedback.isCorrect 
+              ? 'bg-green-100/90 border-green-400 text-green-800' 
+              : 'bg-red-100/90 border-red-400 text-red-800'
+          }`}>
+            <div className="flex items-center space-x-2">
+              <span className="text-2xl">
+                {showFeedback.isCorrect ? '🎉' : '😅'}
+              </span>
+              <div>
+                <div className="font-bold">
+                  {showFeedback.isCorrect ? 'Parabéns!' : 'Tente de novo!'}
+                </div>
+                {!showFeedback.isCorrect && (
+                  <div className="text-sm">
+                    Resposta: <span className="font-bold">{showFeedback.correctAnswer}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
